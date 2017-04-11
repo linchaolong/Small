@@ -15,22 +15,17 @@
  */
 package net.wequick.gradle.util
 
-public final class Log {
-    public static void header(String text) {
-        print AnsiUtils.yellow("[Small] ")
-        println AnsiUtils.white(text)
-    }
+import com.android.build.gradle.internal.tasks.PrepareLibraryTask
 
-    public static void success(String text) {
-        print String.format('        %-64s', text)
-        println AnsiUtils.green('[  OK  ]')
-    }
+public class TaskUtils {
 
-    public static void warn(String text) {
-        println AnsiUtils.red(String.format('        %s', text))
-    }
+    public static File getAarExplodedDir(PrepareLibraryTask task) {
+        if (task.hasProperty('explodedDir')) {
+            return task.explodedDir
+        }
 
-    public static void footer(String text) {
-        println AnsiUtils.white(String.format('        %s', text))
+        def files = task.outputs.files.files
+        if (files != null) return files[0]
+        return null
     }
 }

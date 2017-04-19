@@ -2,10 +2,13 @@ package net.wequick.example.small.app.home;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Keep;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.linchaolong.android.imagepicker.ImagePicker;
 import net.wequick.small.Small;
 import net.wequick.example.small.lib.utils.UIUtils;
 
@@ -35,6 +39,9 @@ import java.util.Map;
  */
 @Keep
 public class MainFragment extends Fragment {
+
+    ImagePicker imagePicker = new ImagePicker();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
@@ -77,7 +84,28 @@ public class MainFragment extends Fragment {
                 checkUpgrade();
             }
         });
+
+        rootView.findViewById(R.id.btnIssue461).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                imagePicker.startChooser(MainFragment.this, new ImagePicker.Callback() {
+                    @Override public void onPickImage(Uri imageUri) {
+
+                    }
+                });
+            }
+        });
         return rootView;
+    }
+
+    @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        imagePicker.onActivityResult(this, requestCode, resultCode, data);
+    }
+
+    @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+        @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        imagePicker.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 
     private void checkUpgrade() {
